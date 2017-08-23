@@ -12,11 +12,12 @@ import UIKit
 
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
-    //----------------------------------------------------------------------
     var dataFirstTableview = [""]
     let addObject = Add()
     //----------------------------------------------------------------------
     
+    // Méthode pour charger la view avec les tâches séléctionnées dans
+    // la première view
     override func viewDidLoad() {
         dataFirstTableview.remove(at: 0)
         for(b, a) in Singleton.singletonInstance.dictionnary{
@@ -33,12 +34,14 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     //----------------------------------------------------------------------
     
+    // Méthode pour gérer la TableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.backgroundColor = UIColor.clear
         return dataFirstTableview.count
     }
     //----------------------------------------------------------------------
     
+    // Méthode pour gérer la TableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:"proto")
         for(_, a) in Singleton.singletonInstance.dictionnary{
@@ -52,12 +55,14 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     //----------------------------------------------------------------------
     
+    // Méthode pour gérer la TableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
         selectedCell.contentView.backgroundColor = UIColor.black
     }
     //----------------------------------------------------------------------
     
+    // Méthode pour gérer la TableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             addObject.dictionnary[dataFirstTableview[indexPath.row]] = false

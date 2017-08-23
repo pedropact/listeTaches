@@ -16,6 +16,7 @@ class Singleton {
     let userDefault = UserDefaults.standard
     //----------------------------------------------------------------------
     
+    // Initialisaton du Singleton
     init() {
         if userDefault.object(forKey: "data") ==  nil {
             userDefault.setValue(dictionnary, forKey: "data")

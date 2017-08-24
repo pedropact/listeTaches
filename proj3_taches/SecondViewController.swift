@@ -7,17 +7,24 @@
 //
 
 import Foundation
-
 import UIKit
 
 class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var dataFirstTableview = [""]
     let addObject = Add()
-    //----------------------------------------------------------------------
+
+    // ---------------------------------------------------------------
+    // MARK: - MÉTHODES D’APPLICATION
     
-    // Méthode pour charger la view avec les tâches séléctionnées dans
-    // la première view
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: viewDidLoad
+     .
+     . - Méthode pour charger la view avec les tâches séléctionnées dans
+     .   la première view
+     .
+     */
     override func viewDidLoad() {
         dataFirstTableview.remove(at: 0)
         for(b, a) in Singleton.singletonInstance.dictionnary{
@@ -27,21 +34,37 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         super.viewDidLoad()
     }
-    //----------------------------------------------------------------------
-    
+
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: viewDidLoad
+     .
+     . - Méthode pour la View
+     .
+     */
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    //----------------------------------------------------------------------
     
-    // Méthode pour gérer la TableView
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.backgroundColor = UIColor.clear
         return dataFirstTableview.count
     }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
+
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:"proto")
         for(_, a) in Singleton.singletonInstance.dictionnary{
@@ -53,17 +76,26 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cell.backgroundColor = UIColor.clear
         return cell
     }
-    //----------------------------------------------------------------------
     
-    // Méthode pour gérer la TableView
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
         selectedCell.contentView.backgroundColor = UIColor.black
     }
-    //----------------------------------------------------------------------
     
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             addObject.dictionnary[dataFirstTableview[indexPath.row]] = false
             addObject.saveToSingleton()
@@ -71,7 +103,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
         }
     }
-    //----------------------------------------------------------------------
+
 }
 
 

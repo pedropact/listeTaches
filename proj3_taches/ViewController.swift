@@ -9,12 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
-    //----------------------------------------------------------------------
     
+    // ---------------------------------------------------------------
+    // MARK: - ELÉMENTS DE LA VIEW
     @IBOutlet weak var tfAdd: UITextField!
     @IBOutlet weak var tableview: UITableView!
+    
+    // ---------------------------------------------------------------
+    // MARK: - PROPRIÉTÉS
     let addObject = Add()
-    //----------------------------------------------------------------------
+
+    // ---------------------------------------------------------------
+    // MARK: - CHEMINS POUR CONNECTER LE SERVEUR
     
     // Le chemim pour sauvegarder les données sur le serveur
     var urlToSend = "http://localhost/dashboard/pedro/php_json/add.php?json=["
@@ -24,23 +30,121 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/pedro/php_json/data.json")!
     //let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/geneau/poo2/data.json")!
     
-    //----------------------------------------------------------------------
 
+    // ---------------------------------------------------------------
+    // MARK: - MÉTHODES D’APPLICATION
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: viewDidLoad
+     .
+     . - Méthode que demarre la View
+     .
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-    //----------------------------------------------------------------------
     
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: viewDidLoad
+     .
+     . - Méthode pour la View
+     .
+     */
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    //----------------------------------------------------------------------
     
-    // Bouton pour ajouter des tâches à la liste
-    // Si le champ de text est vide ou avec un espace, il y a un message de erreur.
-    // Si l’utilisateur a fourni avec une tache, la méthode "addActivity" est appelée
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(addObject.dictionnary)
+        tableView.backgroundColor = UIColor.clear
+        return addObject.dictionnary.count
+    }
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:UITableViewCell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:"proto")
+        cell.textLabel!.text = addObject.keys[indexPath.row]
+        cell.textLabel?.textColor = UIColor.lightGray
+        cell.backgroundColor = UIColor.clear
+        return cell
+    }
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if Array(addObject.dictionnary.values)[indexPath.row] {
+            cell.backgroundColor = UIColor.black
+        }
+    }
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
+        selectedCell.contentView.backgroundColor = UIColor.darkGray
+        
+        if !Array(addObject.dictionnary.values)[indexPath.row] {
+            addObject.dictionnary[Array(addObject.dictionnary.keys)[indexPath.row]] = true
+        } else {
+            addObject.dictionnary[Array(addObject.dictionnary.keys)[indexPath.row]] = false
+        }
+        addObject.saveToSingleton()
+        tableView.reloadData()
+    }
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: tableView
+     .
+     . - Méthode pour gérer la tableView
+     .
+     */
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            addObject.removeValue(keyToRemove: addObject.keys[indexPath.row])
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+        }
+    }
+    
+    // ---------------------------------------------------------------
+    // MARK: - MÉTHODES
+    
+    // ---------------------------------------------------------------
+    /*
+     . Boutton / Méthode: btAdd
+     .
+     . - Bouton pour ajouter des tâches à la liste
+     .   Si le champ de text est vide ou avec un espace, il y a un message de erreur.
+     .   Si l’utilisateur a fourni avec une tache, la méthode "addActivity" est appelée
+     .
+     */
     @IBAction func btAdd(_ sender: UIButton) {
         if tfAdd.text == "" || tfAdd.text == " " {
             let refreshAlert = UIAlertController(title: "Alerte !", message: "Insérer une tache !", preferredStyle: UIAlertControllerStyle.alert)
@@ -52,9 +156,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             addActivity()
         }
     }
-    //----------------------------------------------------------------------
-
-    // Méthode pour ajouter une tâche à la liste
+    
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: addActivity
+     .
+     . - Méthode pour ajouter une tâche à la liste
+     .
+     */
     func addActivity() {
         addObject.addValue(keyToAdd: tfAdd.text!)
         addObject.parseDict()
@@ -63,11 +172,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         hideKeybord()
     }
     
-    //----------------------------------------------------------------------
-    
-    // Boutton pour sauvegarder la liste sur le serveur
-    // Demande à l'utilisateur s'il souhaite enregistrer la liste
-    // Se la réponse est "oui", la méthode "save()" est appelée
+    // ---------------------------------------------------------------
+    /*
+     . Boutton / Méthode: btSave
+     .
+     . - Boutton pour sauvegarder la liste sur le serveur
+     .   Demande à l'utilisateur s'il souhaite enregistrer la liste
+     .   Se la réponse est "oui", la méthode "save()" est appelée
+     .
+     */
     @IBAction func btSave(_ sender: UIButton) {
         let refreshAlert = UIAlertController(title: "Sauvegarder", message: "Envoyer les données au serveur ?", preferredStyle: UIAlertControllerStyle.alert)
         refreshAlert.addAction(UIAlertAction(title: "Oui", style: .default, handler: { (action: UIAlertAction!) in
@@ -77,10 +190,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }))
         present(refreshAlert, animated: true, completion: nil)
     }
-    //----------------------------------------------------------------------
     
-    // Méthode qui sauvegarde la liste de tâches au serveur (dans ce cas, au fichier data.jason)
-    // La méthode remplacera complètement la liste qui se trouve sur le serveur
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: save
+     .
+     . - Méthode qui sauvegarde la liste de tâches au serveur (dans ce cas, au fichier data.jason)
+     .   La méthode remplacera complètement la liste qui se trouve sur le serveur
+     .
+     */
     func save() {
         var counter = 0
         let total = addObject.dictionnary.count
@@ -104,18 +222,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         dataTask.resume()
     }
-    //----------------------------------------------------------------------
     
-    // Méthode qui remplace les caractères qui seront conservés sur le serveur
-    // afin qu'il n'y ait aucune erreur dans le fichier
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: replaceChars
+     .
+     . - Méthode qui remplace les caractères qui seront conservés sur le serveur
+     .   afin qu'il n'y ait aucune erreur dans le fichier
+     .
+     */
     func replaceChars(originalStr: String, what: String, byWhat: String) -> String {
         return originalStr.replacingOccurrences(of: what, with: byWhat)
     }
-    //----------------------------------------------------------------------
     
-    // Boutton pour télécharger la liste qu'est sur le serveur
-    // Demande à l'utilisateur s'il souhaite désélectionner complètement la liste des tâches sélectionnées
-    // Se la réponse est "oui", la méthode "resetListe" est appelée
+    // ---------------------------------------------------------------
+    /*
+     . Boutton / Méthode: btLoad
+     .
+     . - Boutton pour télécharger la liste qu'est sur le serveur
+     .   Demande à l'utilisateur s'il souhaite désélectionner complètement la liste des tâches sélectionnées
+     .   Se la réponse est "oui", la méthode "resetListe" est appelée
+     .
+     */
     @IBAction func btLoad(_ sender: UIButton) {
         let refreshAlert = UIAlertController(title: "Télécharger", message: "Télécharger les données du serveur ?", preferredStyle: UIAlertControllerStyle.alert)
         refreshAlert.addAction(UIAlertAction(title: "Oui", style: .default, handler: { (action: UIAlertAction!) in
@@ -125,10 +253,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }))
         present(refreshAlert, animated: true, completion: nil)
     }
-    //----------------------------------------------------------------------
     
-    // Méthode qui télécharge la liste de tâches qu'est sur le serveur
-    // La méthode remplacera complètement la liste sur le téléphone
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: load
+     .
+     . - Méthode pour télécharger la liste de tâches qu'est sur le serveur
+     .   La méthode remplacera complètement la liste sur le téléphone
+     .
+     */
     func load() {
         let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url:
             requestURL as URL)
@@ -181,11 +314,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         task.resume()
     }
-    //----------------------------------------------------------------------
     
-    // Boutton pour désélectionner tout la liste
-    // Demande à l'utilisateur s'il souhaite désélectionner complètement la liste des tâches sélectionnées
-    // Se la réponse est "oui", la méthode "resetListe" est appelée
+    // ---------------------------------------------------------------
+    /*
+     . Boutton / Méthode: btReset
+     .
+     . - Boutton pour désélectionner tout la liste
+     .   Demande à l'utilisateur s'il souhaite désélectionner complètement la liste des tâches sélectionnées
+     .   Se la réponse est "oui", la méthode "resetListe" est appelée
+     .
+     */
     @IBAction func btReset(_ sender: UIButton) {
         let refreshAlert = UIAlertController(title: "Effacer", message: "Effacer la liste des tâches sélectionnées ?", preferredStyle: UIAlertControllerStyle.alert)
         refreshAlert.addAction(UIAlertAction(title: "Oui", style: .default, handler: { (action: UIAlertAction!) in
@@ -194,9 +332,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         refreshAlert.addAction(UIAlertAction(title: "Non", style: .default, handler: { (action: UIAlertAction!) in
         }))
         present(refreshAlert, animated: true, completion: nil)    }
-    //----------------------------------------------------------------------
     
-    // Désélectionne complètement la liste des tâches qui sont sélectionnées
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: resetList
+     .
+     . - Désélectionne complètement la liste des tâches qui sont sélectionnées
+     .
+     */
     func resetList() {
         for i in 0..<addObject.dictionnary.count {
             if Array( addObject.dictionnary.values)[i] {
@@ -208,60 +351,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         addObject.saveToSingleton()
         tableview.reloadData()
     }
-    //----------------------------------------------------------------------
     
-    // Désactiver le clavier
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: hideKeybord
+     .
+     . - Méthode pour cacher le clavier
+     .
+     */
     func hideKeybord() {
         tfAdd.resignFirstResponder()
     }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tableView.backgroundColor = UIColor.clear
-        return addObject.dictionnary.count
-    }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = UITableViewCell(style:UITableViewCellStyle.default, reuseIdentifier:"proto")
-        cell.textLabel!.text = addObject.keys[indexPath.row]
-        cell.textLabel?.textColor = UIColor.lightGray
-        cell.backgroundColor = UIColor.clear
-        return cell
-    }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if Array(addObject.dictionnary.values)[indexPath.row] {
-            cell.backgroundColor = UIColor.black
-        }
-    }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath as IndexPath)!
-        selectedCell.contentView.backgroundColor = UIColor.darkGray
-        
-        if !Array(addObject.dictionnary.values)[indexPath.row] {
-            addObject.dictionnary[Array(addObject.dictionnary.keys)[indexPath.row]] = true
-        } else {
-            addObject.dictionnary[Array(addObject.dictionnary.keys)[indexPath.row]] = false
-        }
-        addObject.saveToSingleton()
-        tableView.reloadData()
-    }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour gérer la TableView
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
-            addObject.removeValue(keyToRemove: addObject.keys[indexPath.row])
-            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
-        }
-    }
-    //----------------------------------------------------------------------
+
 }

@@ -8,15 +8,14 @@
 
 import Foundation
 
-class Add { //ok
-    //----------------------------------------------------------------------
+class Add {
     
+    // ---------------------------------------------------------------
+    // MARK: - PROPRIÉTÉS
     var dictionnary: [String: Bool]!
     var keys: [String] = []
     var values: [Bool] = []
-    //----------------------------------------------------------------------
-
-    //Initialisation de la classe
+    
     init() {
         if let dict = Singleton.singletonInstance.dictionnary {
             dictionnary = dict
@@ -25,9 +24,17 @@ class Add { //ok
         }
         parseDict()
     }
-   //----------------------------------------------------------------------
+   
+    // ---------------------------------------------------------------
+    // MARK: - MÉTHODES
     
-    // Méthode pour sauvegarder les données dans le dictionnaire
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: parseDict
+     .
+     . - Méthode pour sauvegarder les données dans le dictionnaire
+     .
+     */
     func parseDict() {
         keys = []
         values = []
@@ -36,27 +43,41 @@ class Add { //ok
             values.append(v)
         }
     }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour ajouter les  données dans le dictionnaire
+
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: addValue
+     .
+     . - Méthode pour ajouter les  données dans le dictionnaire
+     .
+     */
     func addValue(keyToAdd: String) {
         dictionnary[keyToAdd] = false
         saveToSingleton()
     }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour supprimer les données dans le dictionnaire
+
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: removeValue
+     .
+     . - Méthode pour supprimer les données dans le dictionnaire
+     .
+     */
     func removeValue(keyToRemove: String) {
         dictionnary[keyToRemove] = nil
         saveToSingleton()
     }
-    //----------------------------------------------------------------------
-    
-    // Méthode pour sauvegarder les données dans le Singleton
+
+    // ---------------------------------------------------------------
+    /*
+     . Méthode: saveToSingleton
+     .
+     . - Méthode pour sauvegarder les données dans le Singleton
+     .
+     */
     func saveToSingleton() {
         parseDict()
         Singleton.singletonInstance.dictionnary = dictionnary
         Singleton.singletonInstance.saveData()
     }
-    //----------------------------------------------------------------------
 }

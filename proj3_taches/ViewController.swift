@@ -23,12 +23,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: - CHEMINS POUR CONNECTER LE SERVEUR
     
     // Le chemim pour sauvegarder les données sur le serveur
-    //var urlToSend = "http://localhost/dashboard/pedro/php_json/add.php?json=["
-    var urlToSend = "http://localhost/dashboard/geneau/poo2/add.php?json=["
+    var urlToSend = "http://localhost/dashboard/pedro/php_json/add.php?json=["
+    
+    // Le chemim pour sauvegarder les données sur le serveur - Serveur du prof.
+    //var urlToSend = "http://localhost/dashboard/geneau/poo2/add.php?json=["
    
     // Le chemin de téléchargement des données du serveur
-    //let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/pedro/php_json/data.json")!
-    let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/geneau/poo2/data.json")!
+    let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/pedro/php_json/data.json")!
+    
+    // Le chemin de téléchargement des données du serveur - Serveur du prof.
+    //let requestURL: NSURL = NSURL(string: "http://localhost/dashboard/geneau/poo2/data.json")!
     
 
     // ---------------------------------------------------------------
